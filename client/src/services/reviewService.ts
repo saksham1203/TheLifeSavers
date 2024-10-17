@@ -26,7 +26,7 @@ export interface UpdateReviewData {
 
 // Fetch reviews function
 export const fetchReviews = async () => {
-  const { data } = await axios.get("http://localhost:5000/api/reviews");
+  const { data } = await axios.get("https://the-life-savers-backend.vercel.app/api/reviews");
   return data;
 };
 
