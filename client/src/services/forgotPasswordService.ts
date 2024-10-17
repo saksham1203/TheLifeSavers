@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const forgotPasswordAPI = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://the-life-savers-backend.vercel.app/api",
 });
 
 // Function to send OTP to the user's email

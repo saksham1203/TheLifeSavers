@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const dashboardAPI = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://the-life-savers-backend.vercel.app/api",
 });
 
 // Automatically set the Authorization header if token is available
