@@ -48,7 +48,7 @@ app.use(xss()); // Prevent cross-site scripting (XSS) attacks
 
 // Enable CORS (Cross-Origin Resource Sharing) with more controls
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://192.168.18.29:5173', 'http://192.168.1.7:5173'], // Your frontend addresses
+  origin: ['http://localhost:5173', 'http://192.168.18.29:5173', 'http://192.168.1.7:5173','https://the-life-savers-backend.vercel.app/'], // Your frontend addresses
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only specific HTTP methods
   credentials: true,
   preflightContinue: false, // Disable preflight responses
