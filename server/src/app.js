@@ -9,10 +9,18 @@ const mongoSanitize = require('express-mongo-sanitize'); // Prevent NoSQL inject
 const xss = require('xss-clean'); // Prevent XSS attacks
 require('dotenv').config();
 
+// Log a hello message when the server starts
+console.log('Hello! Backend server is starting...');
+
 const app = express();
 
 // Connect to the database
 connectDB();
+
+// Root route to verify server is running
+app.get('/', (req, res) => {
+  res.send('Hello! Backend server is running.');
+});
 
 // Middleware to parse JSON bodies with an increased size limit
 app.use(express.json({ limit: '10mb' })); // Increase request body size limit to 10MB for larger payloads like images
@@ -42,6 +50,7 @@ app.use(xss()); // Prevent cross-site scripting (XSS) attacks
 app.use(cors({
   origin: ['http://localhost:5173', 'http://192.168.18.29:5173', 'http://192.168.1.7:5173'], // Your frontend addresses
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only specific HTTP methods
+  credentials: true,
   preflightContinue: false, // Disable preflight responses
   optionsSuccessStatus: 204, // Default status for successful OPTIONS requests
 }));
