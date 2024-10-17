@@ -1,13 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for MERN project deployed on Vercel",
-  "main": "src/app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "vercel-build": "npm install && npm run build"
+    "dev": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",
