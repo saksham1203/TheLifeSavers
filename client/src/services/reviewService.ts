@@ -34,7 +34,7 @@ export const fetchReviews = async () => {
 export const createReview = async (newReviewData: CreateReviewData) => {
   const token = localStorage.getItem("token");
   const { data } = await axios.post(
-    "http://localhost:5000/api/reviews",
+    "https://the-life-savers-backend.vercel.app/api/reviews",
     newReviewData,
     {
       headers: {
@@ -54,7 +54,7 @@ export const updateReview = async ({
   updatedData: Partial<UpdateReviewData>;
 }) => {
   const { data } = await axios.put(
-    `http://localhost:5000/api/reviews/${id}`,
+    `https://the-life-savers-backend.vercel.app/api/reviews/${id}`,
     updatedData
   );
   return data;
@@ -62,6 +62,6 @@ export const updateReview = async ({
 
 // Delete review function (DELETE)
 export const deleteReview = async (id: string) => {
-  const { data } = await axios.delete(`http://localhost:5000/api/reviews/${id}`);
+  const { data } = await axios.delete(`https://the-life-savers-backend.vercel.app/api/reviews/${id}`);
   return data;
 };
