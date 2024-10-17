@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 export const loginRequest = async (data: { identifier: string; password: string; rememberMe: boolean }) => {
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("https://the-life-savers-backend.vercel.app/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
