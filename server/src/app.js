@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
 });
 
 // Middleware to parse JSON bodies with an increased size limit
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' })); // Increase request body size limit to 10MB for larger payloads like images
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Increase URL-encoded form limit
 
 // Use Helmet to secure HTTP headers with more specific settings
 app.use(
@@ -43,36 +43,26 @@ app.use(
 );
 
 // Data sanitization against NoSQL query injection and XSS
-app.use(mongoSanitize());
-app.use(xss());
+app.use(mongoSanitize()); // Sanitize data to prevent NoSQL injection
+app.use(xss()); // Prevent cross-site scripting (XSS) attacks
 
-// **Enable CORS with enhanced options**
-const corsOptions = {
-  origin: [
-    'http://localhost:5173', 
-    'http://192.168.18.29:5173', 
-    'http://192.168.1.7:5173',
-    'https://the-life-savers-fronend.vercel.app' // Correct frontend domain
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Include OPTIONS for preflight
-  credentials: true, // Allow credentials (cookies/auth headers)
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  optionsSuccessStatus: 204 // Status for successful OPTIONS requests
-};
-
-app.use(cors(corsOptions));
-
-// **Handle preflight requests globally**
-app.options('*', cors(corsOptions)); // Handle preflight across all routes
+// Enable CORS (Cross-Origin Resource Sharing) with more controls
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://192.168.18.29:5173', 'http://192.168.1.7:5173','https://the-life-savers-backend.vercel.app'], // Your frontend addresses
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only specific HTTP methods
+  credentials: true,
+  preflightContinue: false, // Disable preflight responses
+  optionsSuccessStatus: 204, // Default status for successful OPTIONS requests
+}));
 
 // Compress response bodies for better performance
 app.use(compression());
 
-// Rate limiting to prevent DDoS and brute force attacks
+// Rate Limiting to prevent DDoS and brute force attacks
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
-  message: 'Too many requests from this IP, please try again later.'
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.', // Custom message on rate limit hit
 });
 app.use(limiter);
 
@@ -86,12 +76,12 @@ app.use((req, res, next) => {
   next(error);
 });
 
-// Global error handler
+// Global error handler for operational errors and programming errors
 app.use((error, req, res, next) => {
   const statusCode = error.status || 500;
   const message = error.message || 'Internal Server Error';
 
-  // Log the error stack in non-production environments
+  // Log error stack in non-production environments
   if (process.env.NODE_ENV !== 'production') {
     console.error(error.stack);
   }
@@ -102,7 +92,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Graceful shutdown of the server
+// Graceful shutdown for the server
 const server = app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
