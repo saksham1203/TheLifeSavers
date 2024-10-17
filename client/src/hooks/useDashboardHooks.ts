@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getDonors, verifyPassword } from "../services/dashboardService";
 // import { FindDonor, VerifyPasswordResponse, Donor } from "../../pages/Dashboard";
-import { FindDonor, VerifyPasswordResponse, Donor } from "../pages/Dashboard/Dashboard";
+import { VerifyPasswordResponse, Donor } from "../pages/Dashboard/Dashboard";
 
 // Query to fetch donors
 export const useDonorsQuery = (watch: any) => {

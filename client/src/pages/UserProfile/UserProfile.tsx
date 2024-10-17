@@ -10,7 +10,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
   const { register, handleSubmit, errors, onSubmit, watch } = useUserProfileForm(user);
 
   // Location state management
-  const [selectedCountry, setSelectedCountry] = useState<string>(user?.country || "");
+  const [, setSelectedCountry] = useState<string>(user?.country || "");
   const [selectedState, setSelectedState] = useState<string>(user?.state || "");
   const [selectedDistrict, setSelectedDistrict] = useState<string>(user?.district || "");
   const [states, setStates] = useState<string[]>([]);

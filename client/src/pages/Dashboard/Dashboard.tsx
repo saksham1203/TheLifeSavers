@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
     watch,
   } = useForm<FindDonor>({ mode: "onChange" });
 
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [, setSelectedCountry] = useState<string>("");
   const [states, setStates] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -55,7 +55,6 @@ const Dashboard: React.FC = () => {
   const [showFullNumber, setShowFullNumber] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string>("");
 
-  const watchCountry = watch("country");
 
   const countries = ["Select Country", "India"];
 

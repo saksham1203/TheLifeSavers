@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserEdit, FaSignOutAlt, FaHome, FaStar } from 'react-icons/fa';
+import { FaUserEdit, FaSignOutAlt, FaHome } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../Context/AuthContext';
 
