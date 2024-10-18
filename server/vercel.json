@@ -5,6 +5,10 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)", 
+      "dest": "src/app.js" 
+    },
+    {
       "src": "/(.*)",
       "headers": {
         "Access-Control-Allow-Origin": "https://the-life-savers-fronend.vercel.app",
