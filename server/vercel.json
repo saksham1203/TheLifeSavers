@@ -1,20 +1,16 @@
 {
   "version": 2,
   "builds": [
-    { "src": "src/app.js", "use": "@vercel/node" }
+    { "src": "src/app.js", "use": "@vercel/node" },
+    { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } }
   ],
   "routes": [
     {
       "src": "/api/(.*)", 
-      "dest": "src/app.js" 
+      "dest": "src/app.js"
     },
     {
-      "src": "/(.*)",
-      "headers": {
-        "Access-Control-Allow-Origin": "https://the-life-savers-fronend.vercel.app",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      },
+      "src": "/(.*)", 
       "dest": "/index.html"
     }
   ],
