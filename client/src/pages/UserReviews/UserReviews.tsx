@@ -171,20 +171,19 @@ const UserReviews: React.FC = () => {
     setReviewToDelete(null);
   };
 
+  // Close modal on successful add/edit/delete operation
+  useEffect(() => {
+    if (createMutation.isSuccess || updateMutation.isSuccess) {
+      handleCloseModal();
+    }
+  }, [createMutation.isSuccess, updateMutation.isSuccess]);
 
-    // Close modal on successful add/edit/delete operation
-    useEffect(() => {
-      if (createMutation.isSuccess || updateMutation.isSuccess) {
-        handleCloseModal();
-      }
-    }, [createMutation.isSuccess, updateMutation.isSuccess]);
-  
-    // Close delete modal on successful delete operation
-    useEffect(() => {
-      if (deleteMutation.isSuccess) {
-        handleCancelDelete();
-      }
-    }, [deleteMutation.isSuccess]);
+  // Close delete modal on successful delete operation
+  useEffect(() => {
+    if (deleteMutation.isSuccess) {
+      handleCancelDelete();
+    }
+  }, [deleteMutation.isSuccess]);
 
   // Additional JSX for rendering reviews
   return (
@@ -274,7 +273,7 @@ const UserReviews: React.FC = () => {
                         <img
                           src={review.image}
                           alt="Review"
-                          className="w-full h-20 object-cover mb-2 rounded-lg" // Reduced image height
+                          className="hidden sm:block w-full h-20 object-cover mb-2 rounded-lg" // Hidden on small screens
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <span
@@ -286,6 +285,7 @@ const UserReviews: React.FC = () => {
                         </div>
                       </div>
                     )}
+
                     <p className="text-sm text-gray-700 border border-gray-300 p-3 rounded-lg h-20 overflow-auto">
                       {review.comment}
                     </p>
