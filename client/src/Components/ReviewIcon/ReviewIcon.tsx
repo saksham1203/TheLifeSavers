@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ReviewIcon: React.FC = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -12,12 +12,15 @@ const ReviewIcon: React.FC = () => {
   const hiddenOffset = 10; // Slight offset to hide partially on the edge
 
   const updatePositionWithinBounds = useCallback(() => {
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
     setPosition((prevPosition) => ({
       x: Math.min(
         prevPosition.x,
-        window.innerWidth - buttonWidth - (scrollbarWidth > 0 ? scrollbarWidth : 0)
+        window.innerWidth -
+          buttonWidth -
+          (scrollbarWidth > 0 ? scrollbarWidth : 0)
       ),
       y: Math.min(prevPosition.y, window.innerHeight - buttonHeight),
     }));
@@ -26,7 +29,7 @@ const ReviewIcon: React.FC = () => {
   useEffect(() => {
     const updateInitialPosition = () => {
       const initialX = -hiddenOffset; // Align on the left side
-      const initialY = window.innerHeight / 6;
+      const initialY = window.innerHeight / 10; // Move it closer to the header
 
       setPosition({
         x: Math.max(initialX, -hiddenOffset), // Ensure it stays slightly hidden on the left
@@ -40,20 +43,22 @@ const ReviewIcon: React.FC = () => {
       updatePositionWithinBounds();
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [updatePositionWithinBounds]);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+  const handleMouseDown = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
     setIsDragging(true);
     setHasMoved(false);
 
     const clientX =
-      e.type === 'mousedown'
+      e.type === "mousedown"
         ? (e as React.MouseEvent).clientX
         : (e as React.TouchEvent).touches[0].clientX;
     const clientY =
-      e.type === 'mousedown'
+      e.type === "mousedown"
         ? (e as React.MouseEvent).clientY
         : (e as React.TouchEvent).touches[0].clientY;
 
@@ -62,19 +67,21 @@ const ReviewIcon: React.FC = () => {
       y: clientY - position.y,
     });
 
-    document.body.style.userSelect = 'none';
-    document.body.style.overflow = 'hidden';
+    document.body.style.userSelect = "none";
+    document.body.style.overflow = "hidden";
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+  const handleMouseMove = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
     if (!isDragging) return;
 
     const clientX =
-      e.type === 'mousemove'
+      e.type === "mousemove"
         ? (e as React.MouseEvent).clientX
         : (e as React.TouchEvent).touches[0].clientX;
     const clientY =
-      e.type === 'mousemove'
+      e.type === "mousemove"
         ? (e as React.MouseEvent).clientY
         : (e as React.TouchEvent).touches[0].clientY;
 
@@ -82,10 +89,12 @@ const ReviewIcon: React.FC = () => {
     let newY = clientY - offset.y;
 
     if (newX < -hiddenOffset) newX = -hiddenOffset;
-    if (newX > window.innerWidth - buttonWidth + hiddenOffset) newX = window.innerWidth - buttonWidth + hiddenOffset;
+    if (newX > window.innerWidth - buttonWidth + hiddenOffset)
+      newX = window.innerWidth - buttonWidth + hiddenOffset;
 
     if (newY < 0) newY = 0;
-    if (newY > window.innerHeight - buttonHeight) newY = window.innerHeight - buttonHeight;
+    if (newY > window.innerHeight - buttonHeight)
+      newY = window.innerHeight - buttonHeight;
 
     requestAnimationFrame(() => {
       setPosition({ x: newX, y: newY });
@@ -97,16 +106,24 @@ const ReviewIcon: React.FC = () => {
     if (!isDragging) return;
 
     setIsDragging(false);
-    document.body.style.userSelect = '';
-    document.body.style.overflow = '';
+    document.body.style.userSelect = "";
+    document.body.style.overflow = "";
 
     if (hasMoved) {
       if (position.x < window.innerWidth / 2) {
-        setPosition((prevPosition) => ({ x: -hiddenOffset, y: prevPosition.y })); // Snap to left side
-      } else {
-        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
         setPosition((prevPosition) => ({
-          x: window.innerWidth - buttonWidth + hiddenOffset - (scrollbarWidth > 0 ? scrollbarWidth : 0),
+          x: -hiddenOffset,
+          y: prevPosition.y,
+        })); // Snap to left side
+      } else {
+        const scrollbarWidth =
+          window.innerWidth - document.documentElement.clientWidth;
+        setPosition((prevPosition) => ({
+          x:
+            window.innerWidth -
+            buttonWidth +
+            hiddenOffset -
+            (scrollbarWidth > 0 ? scrollbarWidth : 0),
           y: prevPosition.y,
         })); // Snap to right side
       }
@@ -115,7 +132,7 @@ const ReviewIcon: React.FC = () => {
 
   const handleClick = () => {
     if (!hasMoved) {
-      navigate('/reviews');
+      navigate("/reviews");
     }
   };
 
@@ -127,10 +144,10 @@ const ReviewIcon: React.FC = () => {
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        touchAction: 'none',
+        touchAction: "none",
         width: `${buttonWidth}px`,
         height: `${buttonHeight}px`,
-        userSelect: 'none',
+        userSelect: "none",
         zIndex: 1000,
       }}
       onMouseDown={handleMouseDown}
@@ -144,7 +161,11 @@ const ReviewIcon: React.FC = () => {
       role="button"
       aria-label="Navigate to reviews page"
     >
-      <span className={`font-bold transform ${isOnLeft ? 'rotate-90' : '-rotate-90'}`}>
+      <span
+        className={`font-bold transform ${
+          isOnLeft ? "rotate-90" : "-rotate-90"
+        }`}
+      >
         Reviews
       </span>
     </div>
