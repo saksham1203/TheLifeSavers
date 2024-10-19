@@ -46,23 +46,37 @@ app.use(
 app.use(mongoSanitize()); // Sanitize data to prevent NoSQL injection
 app.use(xss()); // Prevent cross-site scripting (XSS) attacks
 
-// Enable CORS (Cross-Origin Resource Sharing) with more controls
-app.use(cors({
-  origin: ['https://the-life-savers-fronend.vercel.app'], // Frontend origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-}));
+// Define allowed origins for CORS
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://the-life-savers-fronend.vercel.app', // Production frontend
+];
+
+// Enable CORS with dynamic origin checking
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // Allow cookies/auth headers
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 
 // Compress response bodies for better performance
 app.use(compression());
 
-// Rate Limiting to prevent DDoS and brute force attacks
+// Rate limiting to prevent DDoS and brute force attacks
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.', // Custom message on rate limit hit
+  message: 'Too many requests from this IP, please try again later.',
 });
 app.use(limiter);
 
@@ -76,7 +90,7 @@ app.use((req, res, next) => {
   next(error);
 });
 
-// Global error handler for operational errors and programming errors
+// Global error handler for operational and programming errors
 app.use((error, req, res, next) => {
   const statusCode = error.status || 500;
   const message = error.message || 'Internal Server Error';
@@ -92,7 +106,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Graceful shutdown for the server
+// Graceful shutdown of the server
 const server = app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
