@@ -1,12 +1,7 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from "axios";
 
-// Define API Base URL to avoid repetition
-const API_URL = 'https://the-life-savers-backend.vercel.app/api/reviews';
-// const API_URL = 'http://localhost:5000/api';
-
-// Review Interfaces
 export interface Review {
-  userId: string;
+  userId: any;
   _id: string;
   username: string;
   rating: number;
@@ -22,63 +17,51 @@ export interface CreateReviewData {
 }
 
 export interface UpdateReviewData {
-  name?: string;
-  rating?: number;
-  comment?: string;
+  name: string;
+  rating: number;
+  comment: string;
   fileUpload?: FileList;
   image?: string;
 }
 
-// Helper function to get token from localStorage
-const getAuthToken = () => localStorage.getItem('token');
-
-// Fetch Reviews (GET)
-export const fetchReviews = async (): Promise<Review[]> => {
-  try {
-    const { data }: AxiosResponse<Review[]> = await axios.get(API_URL);
-    return data;
-  } catch (error: any) {
-    console.error('Failed to fetch reviews:', error);
-    throw new Error(error.response?.data?.message || 'Failed to fetch reviews');
-  }
+// Fetch reviews function
+export const fetchReviews = async () => {
+  const { data } = await axios.get("https://the-life-savers-backend.vercel.app/api/reviews");
+  return data;
 };
 
-// Create a New Review (POST)
-export const createReview = async (newReviewData: CreateReviewData): Promise<Review> => {
-  try {
-    const token = getAuthToken();
-    if (!token) throw new Error('Authentication token is missing');
-
-    const { data }: AxiosResponse<Review> = await axios.post(API_URL, newReviewData, {
+// Create a new review function (POST)
+export const createReview = async (newReviewData: CreateReviewData) => {
+  const token = localStorage.getItem("token");
+  const { data } = await axios.post(
+    "https://the-life-savers-backend.vercel.app/api/reviews",
+    newReviewData,
+    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
-    return data;
-  } catch (error: any) {
-    console.error('Failed to create review:', error);
-    throw new Error(error.response?.data?.message || 'Failed to create review');
-  }
+    }
+  );
+  return data;
 };
 
-// Update Review (PUT)
-export const updateReview = async (id: string, updatedData: Partial<UpdateReviewData>): Promise<Review> => {
-  try {
-    const { data }: AxiosResponse<Review> = await axios.put(`${API_URL}/${id}`, updatedData);
-    return data;
-  } catch (error: any) {
-    console.error('Failed to update review:', error);
-    throw new Error(error.response?.data?.message || 'Failed to update review');
-  }
+// Update review function (PUT)
+export const updateReview = async ({
+  id,
+  updatedData,
+}: {
+  id: string;
+  updatedData: Partial<UpdateReviewData>;
+}) => {
+  const { data } = await axios.put(
+    `https://the-life-savers-backend.vercel.app/api/reviews/${id}`,
+    updatedData
+  );
+  return data;
 };
 
-// Delete Review (DELETE)
-export const deleteReview = async (id: string): Promise<{ message: string }> => {
-  try {
-    const { data }: AxiosResponse<{ message: string }> = await axios.delete(`${API_URL}/${id}`);
-    return data;
-  } catch (error: any) {
-    console.error('Failed to delete review:', error);
-    throw new Error(error.response?.data?.message || 'Failed to delete review');
-  }
+// Delete review function (DELETE)
+export const deleteReview = async (id: string) => {
+  const { data } = await axios.delete(`https://the-life-savers-backend.vercel.app/api/reviews/${id}`);
+  return data;
 };
