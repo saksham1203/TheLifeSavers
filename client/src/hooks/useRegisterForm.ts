@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { sendOtp, verifyOtp, registerUser } from '../services/authService';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { getStates, getDistricts, getCities } from '../Components/indiaData';
 
 export interface RegisterFormInput {
   firstName: string;
@@ -22,23 +23,34 @@ export interface RegisterFormInput {
   termsAccepted: boolean;
 }
 
+interface NewUser {
+  name: string;
+  email: string;
+  password: string;
+  mobileNumber: string;
+  country: string;
+  state: string;
+  district: string;
+  city: string;
+  bloodGroup: string;
+  gender: string;
+  availability: string;
+  reportUpload: FileList;
+  termsAccepted: boolean;
+}
+
 const useRegisterForm = () => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [states, setStates] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [otpModalOpen, setOtpModalOpen] = useState(false);
   const [otp, setOtp] = useState('');
   const [isVerified, setIsVerified] = useState(false);
   const [email, setEmail] = useState('');
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    watch,
-  } = useForm<RegisterFormInput>({ mode: 'onChange' });
+  const { register, handleSubmit, formState: { errors, isValid }, watch } = useForm<RegisterFormInput>({ mode: 'onChange' });
 
   const sendOtpMutation = useMutation({
     mutationFn: (email: string) => sendOtp(email),
@@ -58,46 +70,35 @@ const useRegisterForm = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (newUser: RegisterFormInput) => registerUser(newUser),
+    mutationFn: (newUser: NewUser) => registerUser(newUser),
     onSuccess: () => {
       toast.success('User registered successfully!');
       navigate('/login');
     },
     onError: (error: any) => {
-      if (error.response && error.response.data && error.response.data.msg) {
-        toast.error(error.response.data.msg);
-      } else {
-        toast.error('Error registering user!');
-      }
+      const message = error?.response?.data?.msg || 'Error registering user!';
+      toast.error(message);
     },
   });
 
   const handleCountryChange = (selectedCountry: string) => {
     setSelectedCountry(selectedCountry);
-
     if (selectedCountry === 'India') {
-      setStates(['Haryana']);
+      setStates(getStates());
     } else {
       setStates([]);
-      setCities([]);
       setDistricts([]);
+      setCities([]);
     }
   };
 
   const handleStateChange = (selectedState: string) => {
-    if (selectedState === 'Haryana') {
-      setDistricts(['Kurukshetra']);
-    } else {
-      setCities([]);
-    }
+    setDistricts(getDistricts(selectedState));
+    setCities([]);
   };
 
-  const handleDistrictChange = (selectedDistrict: string) => {
-    if (selectedDistrict === 'Kurukshetra') {
-      setCities(['Thanesar']);
-    } else {
-      setCities([]);
-    }
+  const handleDistrictChange = (selectedDistrict: string, selectedState: string) => {
+    setCities(getCities(selectedState, selectedDistrict));
   };
 
   const handleVerifyClick = () => {
@@ -110,7 +111,7 @@ const useRegisterForm = () => {
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp === '123456') {
-      toast.success('Email verified successfully!');
+      toast.success('Email verified successfully! (Bypass logic)');
       setIsVerified(true);
       setOtp('');
       setOtpModalOpen(false);
@@ -119,8 +120,12 @@ const useRegisterForm = () => {
     }
   };
 
-  const onSubmit = handleSubmit((data) => {
-    mutation.mutate(data);
+  const onSubmit = handleSubmit((data: RegisterFormInput) => {
+    const newUser: NewUser = {
+      ...data,
+      name: `${data.firstName} ${data.lastName}`,
+    };
+    mutation.mutate(newUser);
   });
 
   return {
@@ -130,14 +135,15 @@ const useRegisterForm = () => {
     watch,
     selectedCountry,
     states,
-    cities,
     districts,
+    cities,
     otpModalOpen,
     otp,
     isVerified,
     handleCountryChange,
     handleStateChange,
-    handleDistrictChange,
+    handleDistrictChange: (district: string) =>
+      handleDistrictChange(district, watch('state')),
     handleVerifyClick,
     handleOtpSubmit,
     onSubmit,
