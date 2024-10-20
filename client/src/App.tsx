@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppLayout from "./layout/AppLayout";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import PublicRoute from "./Components/PublicRoute"; // New public route component
 
 // Lazy load components to optimize performance
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -45,17 +46,21 @@ const App = () => {
         {
           path: PATHS.ROOT,
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <Register />
-            </Suspense>
+            <PublicRoute>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Register />
+              </Suspense>
+            </PublicRoute>
           ),
         },
         {
           path: PATHS.LOGIN,
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <Login />
-            </Suspense>
+            <PublicRoute>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Login />
+              </Suspense>
+            </PublicRoute>
           ),
         },
         {
@@ -68,7 +73,7 @@ const App = () => {
         },
         {
           path: PATHS.DASHBOARD,
-          element: <ProtectedRoute />, // Use ProtectedRoute for dashboard
+          element: <ProtectedRoute />,
           children: [
             {
               path: PATHS.DASHBOARD,
@@ -82,7 +87,7 @@ const App = () => {
         },
         {
           path: PATHS.PROFILE,
-          element: <ProtectedRoute />, // Use ProtectedRoute for profile
+          element: <ProtectedRoute />,
           children: [
             {
               path: PATHS.PROFILE,

@@ -538,11 +538,12 @@ const Register: React.FC = () => {
             <div className="flex items-center mt-4">
               <hr className="flex-1 border-gray-300" />
               <span className="mx-4 text-sm text-gray-600">
+                Already have an account?{" "}
                 <Link
                   to="/login"
                   className="text-red-600 hover:text-red-500 font-medium"
                 >
-                  Already have an account? Login here
+                  Login here
                 </Link>
               </span>
               <hr className="flex-1 border-gray-300" />

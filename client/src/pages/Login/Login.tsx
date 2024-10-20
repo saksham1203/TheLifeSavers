@@ -205,11 +205,18 @@ const Login: React.FC = () => {
               </button>
             </div>
           </form>
-          <div className="mt-4 text-sm text-gray-600 text-center">
-            Don't have an account?{" "}
-            <Link to="/" className="font-medium text-red-600 hover:text-red-500">
-              Sign up
-            </Link>
+          <div className="flex items-center mt-4 w-full">
+            <hr className="flex-1 border-gray-300" />
+            <span className="mx-4 text-sm text-gray-600">
+              Don't have an account?{" "}
+              <Link
+                to="/"
+                className="font-medium text-red-600 hover:text-red-500"
+              >
+                Sign up
+              </Link>
+            </span>
+            <hr className="flex-1 border-gray-300" />
           </div>
         </div>
       </div>
