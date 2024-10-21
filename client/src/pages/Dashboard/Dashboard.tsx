@@ -15,6 +15,7 @@ export interface FindDonor {
 }
 
 export interface Donor {
+  gender: ReactNode;
   firstName: ReactNode;
   lastName: ReactNode;
   name: string;
@@ -363,13 +364,13 @@ const Dashboard: React.FC = () => {
                         Name
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Gender
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Availability
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Mobile
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Report
                       </th>
                     </tr>
                   </thead>
@@ -381,6 +382,9 @@ const Dashboard: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {`${donor.firstName} ${donor.lastName}`}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {donor.gender}
                         </td>
                         <td
                           className={`px-6 py-4 whitespace-nowrap text-sm mt-1 ${
@@ -398,16 +402,6 @@ const Dashboard: React.FC = () => {
                           >
                             {maskedMobile(donor.mobileNumber)}
                           </button>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <a
-                            href={donor.reportUrl}
-                            download
-                            className="text-red-500 hover:underline"
-                          >
-                            Download Report
-                          </a>
                         </td>
                       </tr>
                     ))}
@@ -539,7 +533,7 @@ const Dashboard: React.FC = () => {
                       Mobile Number
                     </h3>
                     <div className="mt-3">
-                      <p className="text-lg font-bold text-blue-500">
+                      <p className="text-lg text-blue-500">
                         {selectedDonor && showFullNumber ? (
                           <a
                             href={`tel:${selectedDonor.mobileNumber}`}
