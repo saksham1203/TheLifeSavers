@@ -1,7 +1,10 @@
 import React, { ReactNode, useState, FormEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import { useDonorsQuery, useVerifyPasswordMutation } from "../hooks/useDashboardHooks";
-import { useDonorsQuery, useVerifyPasswordMutation } from "../../hooks/useDashboardHooks";
+import {
+  useDonorsQuery,
+  useVerifyPasswordMutation,
+} from "../../hooks/useDashboardHooks";
 
 export interface FindDonor {
   bloodGroup: string;
@@ -55,7 +58,6 @@ const Dashboard: React.FC = () => {
   const [showFullNumber, setShowFullNumber] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string>("");
 
-
   const countries = ["Select Country", "India"];
 
   const handleCountryChange = (selectedCountry: string) => {
@@ -87,12 +89,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const {
-    data: donors,
-    isLoading,
-    isError,
-    refetch,
-  } = useDonorsQuery(watch);
+  const { data: donors, isLoading, isError, refetch } = useDonorsQuery(watch);
 
   const onSubmit: SubmitHandler<FindDonor> = (data) => {
     console.log(data);
@@ -517,12 +514,12 @@ const Dashboard: React.FC = () => {
               &#8203;
             </span>
 
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full animate-slide-in">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full max-w-2xl animate-slide-in">
+              <div className="bg-white px-6 pt-6 pb-4">
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-14 w-14 rounded-full bg-green-100 sm:mx-0 sm:h-12 sm:w-12">
                     <svg
-                      className="h-6 w-6 text-green-600"
+                      className="h-8 w-8 text-green-600"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -538,32 +535,31 @@ const Dashboard: React.FC = () => {
                     </svg>
                   </div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-xl leading-6 font-medium text-gray-900">
                       Mobile Number
                     </h3>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        {selectedDonor
-                          ? showFullNumber
-                            ? selectedDonor.mobileNumber
-                            : maskedMobile(selectedDonor.mobileNumber)
-                          : ""}
+                    <div className="mt-3">
+                      <p className="text-lg font-bold text-blue-500">
+                        {selectedDonor && showFullNumber ? (
+                          <a
+                            href={`tel:${selectedDonor.mobileNumber}`}
+                            className="hover:underline"
+                          >
+                            {selectedDonor.mobileNumber}
+                          </a>
+                        ) : (
+                          maskedMobile(selectedDonor?.mobileNumber || "")
+                        )}
                       </p>
                       {!showFullNumber && (
                         <form onSubmit={handlePasswordSubmit}>
                           <input
                             type="password"
                             placeholder="Enter password to reveal"
-                            className="mt-2 block w-full px-3 py-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className="mt-3 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
-                          <button
-                            type="submit"
-                            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-transform duration-300 transform hover:scale-105"
-                          >
-                            Submit
-                          </button>
                         </form>
                       )}
                       {popupMessage && (
@@ -575,14 +571,23 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 flex justify-end space-x-4">
                 <button
-                  onClick={() => setShowPopup(false)}
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-transform duration-300 transform hover:scale-105"
+                  onClick={() => setShowPopup(false)}
+                  className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform duration-300 transform hover:scale-105"
                 >
-                  Close
+                  Cancel
                 </button>
+                {!showFullNumber && (
+                  <button
+                    type="submit"
+                    className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-transform duration-300 transform hover:scale-105"
+                    onClick={handlePasswordSubmit}
+                  >
+                    Submit
+                  </button>
+                )}
               </div>
             </div>
           </div>
