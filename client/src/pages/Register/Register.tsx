@@ -563,7 +563,8 @@ const Register: React.FC = () => {
                 {[...Array(6)].map((_, index) => (
                   <input
                     key={index}
-                    type="text"
+                    type="tel" // Opens number keyboard on mobile
+                    inputMode="numeric" // Ensures numeric layout for all devices
                     maxLength={1}
                     className="w-12 h-12 border text-center text-2xl rounded-md border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
                     value={otp[index] || ""} // Ensure OTP value state handling
