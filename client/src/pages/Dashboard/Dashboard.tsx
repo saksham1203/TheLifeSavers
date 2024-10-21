@@ -464,6 +464,9 @@ const Dashboard: React.FC = () => {
                         <p className="text-sm font-medium text-gray-800">
                           {`${donor.firstName} ${donor.lastName}`}
                         </p>
+                        <p className="text-sm font-medium text-gray-800">
+                          {donor.gender}
+                        </p>
                         <p className="text-xs text-gray-600">
                           {donor.availability ? (
                             <span className="text-green-600">Available</span>
